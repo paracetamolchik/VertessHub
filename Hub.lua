@@ -245,7 +245,7 @@ function new.Window(namewindow)
 	local opened = false
 	CollapseBtn.MouseButton1Click:Connect(function()
 		if opened == false then
-			t:Create(Main1, info, {Size = UDim2.new(0, 115+Title.TextBounds.X, 0, 31)}):Play()
+			t:Create(Main1, info, {Size = UDim2.new(0, 115+Title.TextBounds.X, 0, 30)}):Play()
 		else
 			t:Create(Main1, info, {Size = UDim2.new(0, 380, 0, 270)}):Play()
 		end
