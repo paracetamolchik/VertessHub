@@ -4,12 +4,16 @@ local t = game:GetService("TweenService")
 local info = TweenInfo.new(0.4, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out)
 local info2 = TweenInfo.new(0.15, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out)
 local info3 = TweenInfo.new(0.1, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out)
-local info4 = TweenInfo.new(0.4, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out)
-local info5 = TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+local info4 = TweenInfo.new(0.5, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out)
+local info5 = TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+local info9 = TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.In)
 local info6 = TweenInfo.new(0.6, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out)
+local info7 = TweenInfo.new(0.3, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out)
+local info8 = TweenInfo.new(0.08, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out)
 local UIS = game:GetService("UserInputService")
 local mouse = game.Players.LocalPlayer:GetMouse()
 local keycode = ""
+local timernotify = 0
 
 local function encode(a)
 	local chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-_=+[]{}|;:<>?,./`~'
@@ -56,7 +60,7 @@ local function shownhide(frame, gradient, title)
 	title.TextTransparency = 0
 	local t1 = 0
 	while true do
-		t1 = t1 + 0.04
+		t1 = t1 + 0.038
 		if t1 > 1 then
 			t1 = 1
 			gradient.Transparency = NumberSequence.new({
@@ -122,7 +126,7 @@ local function animation(parent)
 
 	t:Create(Logo, info4, {Size = UDim2.new(0, 26, 0, 26)}):Play()
 	t:Create(Logo, info5, {Rotation = 360}):Play()
-	wait(0.4)
+	wait(0.5)
 
 	local gradient = Instance.new("UIGradient", title)
 
@@ -145,7 +149,7 @@ local function Move(a)
 			local buttonWidth = a.AbsoluteSize.X
 			local buttonHeight = a.AbsoluteSize.Y
 
-			if mouseX >= buttonX and mouseX <= buttonX + buttonWidth and mouseY >= buttonY and mouseY <= buttonY + buttonHeight then
+			if mouseX>=buttonX and mouseX<=buttonX+buttonWidth and mouseY>=buttonY and mouseY<=buttonY+buttonHeight then
 				offsetX = buttonX - mouseX
 				offsetY = buttonY - mouseY
 				dragging = true
@@ -156,7 +160,7 @@ local function Move(a)
 	local function onInputChanged(input)
 		if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
 			local mouseX, mouseY = input.Position.X, input.Position.Y
-			t:Create(a.Parent, TweenInfo.new(0.1, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {Position = UDim2.new(0, mouseX + offsetX, 0, mouseY + offsetY)}):Play()
+			t:Create(a.Parent,info8,{Position=UDim2.new(0,mouseX+offsetX,0,mouseY+offsetY)}):Play()
 		end
 	end
 
@@ -170,6 +174,13 @@ local function Move(a)
 	UIS.InputChanged:Connect(onInputChanged)
 	UIS.InputEnded:Connect(onInputEnded)
 end
+
+spawn(function()
+	while true do
+		wait(1)
+		timernotify -= 1
+	end
+end)
 
 local function getKeyCodeString(a)
 	local keyCodeString = tostring(a)
@@ -242,14 +253,19 @@ function new.Window(namewindow)
 	backgroundcolor(CollapseBtn, 0, 0, 25)
 	stroke(CollapseBtn, 0, 0, 150, 1)
 
-	local opened = false
+	local Collapsed = false
+	local CollapsedSize = 115+Title.TextBounds.X
 	CollapseBtn.MouseButton1Click:Connect(function()
-		if opened == false then
-			t:Create(Main1, info, {Size = UDim2.new(0, 115+Title.TextBounds.X, 0, 30)}):Play()
+		if Collapsed == false then
+			if UIS.TouchEnabled then
+				t:Create(Main1, info, {Size = UDim2.new(0, CollapsedSize, 0, 31)}):Play()
+			else
+				t:Create(Main1, info, {Size = UDim2.new(0, CollapsedSize, 0, 30)}):Play()
+			end
 		else
 			t:Create(Main1, info, {Size = UDim2.new(0, 380, 0, 270)}):Play()
 		end
-		opened = not opened
+		Collapsed = not Collapsed
 	end)
 
 	local CollapseVisual = Instance.new("Frame", CollapseBtn) borderpixel(CollapseVisual)
@@ -292,6 +308,47 @@ function new.Window(namewindow)
 	local ContainerSections = Instance.new("Frame", MainSections) borderpixel(ContainerSections)
 	size(ContainerSections, 1, 0, 1, 0)
 	tbackground(ContainerSections)
+	
+	local notify = Instance.new("TextLabel", Gui) borderpixel(notify) txtWrapped(notify)
+	size(notify, 0, 140, 0, 50)
+	pos(notify, 1, 160, 1, -20)
+	notify.AnchorPoint = Vector2.new(1, 1)
+	backgroundcolor(notify, 0, 0, 25)
+	notify.BackgroundTransparency = 0.75
+	stroke(notify, 0, 0, 150, 1)
+	corner(notify, 0, 8)
+	text(notify, "Window closed, to go back press ''K''")
+	textColor(notify, 255, 255, 255)
+	textSize(notify, 15)
+	textFont(notify, Enum.Font.Cartoon)
+	
+	Close.MouseButton1Click:Connect(function()
+		t:Create(Main1, info, {Size = UDim2.new(0, 0, 0, 0)}):Play()
+		wait(0.4)
+		Main1.Visible = false
+		if timernotify <= 0 then
+			t:Create(notify, info5, {Position = UDim2.new(1, -20, 1, -20)}):Play()
+			wait(4)
+			t:Create(notify, info9, {Position = UDim2.new(1, 160, 1, -20)}):Play()
+		end
+		timernotify = 600
+	end)
+	
+	UIS.InputBegan:Connect(function(key)
+		if key.KeyCode == Enum.KeyCode.K then
+			if not Main1.Visible and Collapsed then
+				Main1.Visible = true
+				if UIS.TouchEnabled then
+					t:Create(Main1, info, {Size = UDim2.new(0, CollapsedSize, 0, 31)}):Play()
+				else
+					t:Create(Main1, info, {Size = UDim2.new(0, CollapsedSize, 0, 30)}):Play()
+				end
+			elseif not Main1.Visible and not Collapsed then
+				Main1.Visible = true
+				t:Create(Main1, info, {Size = UDim2.new(0, 380, 0, 270)}):Play()
+			end
+		end
+	end)
 
 	local Sections = {}
 	local ButtonsName = {}
@@ -394,7 +451,7 @@ function new.Window(namewindow)
 			end)
 		end
 
-		function Buttons:Togglebtn(textToggletbtn, callback, reqiured)
+		function Buttons:Togglebtn(textToggletbtn, callback)
 			local db = false
 			local btn = Instance.new("TextButton", CSectionPage) borderpixel(btn)
 			text(btn, "")
@@ -430,13 +487,12 @@ function new.Window(namewindow)
 			backgroundcolor(circle2, 255, 255, 255)
 
 			btn.MouseButton1Click:Connect(function()
-				
 				db = not db
 				callback(db)
 				if circle2.BackgroundTransparency == 1 then
-					t:Create(circle2, TweenInfo.new(0.05, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
+					t:Create(circle2, info8, {BackgroundTransparency = 0}):Play()
 				else
-					t:Create(circle2, TweenInfo.new(0.05, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
+					t:Create(circle2, info8, {BackgroundTransparency = 1}):Play()
 				end
 			end)
 		end
@@ -581,6 +637,120 @@ function new.Window(namewindow)
 				keyvisual.Size = UDim2.new(0, keyvisual.TextBounds.X+8, 0, 16)
 				pos(Label, 0, keyvisual.Size.X.Offset+8, 0, 0)
 				chanding = true
+			end)
+		end
+		
+		function Buttons:DropBtn(textbtn, Buttons, callback)
+			local opened = false
+			local opening = false
+			local sizeYframe = 0
+			local btn = Instance.new("TextLabel", CSectionPage) borderpixel(btn)
+			text(btn, "")
+			size(btn, 1, 0, 0, 41)
+			corner(btn, 0, 7)
+			stroke(btn, 0, 0, 150, 1)
+			backgroundcolor(btn, 0, 0, 25)
+			
+			local titleframe = Instance.new("Frame", btn) borderpixel(titleframe)
+			size(titleframe, 1, 0, 0, 26)
+			tbackground(titleframe)
+			
+			local visualbtn = Instance.new("ImageLabel", titleframe) borderpixel(visualbtn)
+			size(visualbtn, 0, 12, 0, 12)
+			center(visualbtn)
+			pos(visualbtn, 1, -14, 0.5, 0)
+			tbackground(visualbtn)
+			img(visualbtn, "rbxassetid://101302882001938")
+			visualbtn.Rotation = -90
+			
+			local titlebtn = Instance.new("TextButton", titleframe) borderpixel(titlebtn)
+			text(titlebtn, " "..textbtn)
+			size(titlebtn, 1, 0, 0, 26)
+			tbackground(titlebtn)
+			textColor(titlebtn, 255, 255, 255)
+			textFont(titlebtn, Enum.Font.Cartoon)
+			textX(titlebtn, Enum.TextXAlignment.Left)
+			textSize(titlebtn, 16)
+			
+			local border = Instance.new("Frame", btn) borderpixel(border)
+			size(border, 1, 0, 0, 1)
+			pos(border, 0, 0, 0, 26)
+			backgroundcolor(border, 0, 0, 150)
+			
+			local selectedframe = Instance.new("Frame", btn) borderpixel(selectedframe)
+			size(selectedframe, 1, 0, 0, 12)
+			pos(selectedframe, 0, 0, 0, 27)
+			tbackground(selectedframe)
+			
+			local titletext = Instance.new("TextLabel", selectedframe) borderpixel(titletext)
+			text(titletext, " Selected: "..Buttons[1])
+			size(titletext, 1, 0, 1, 0)
+			tbackground(titletext)
+			textColor(titletext, 255,255,255)
+			textFont(titletext, Enum.Font.Cartoon)
+			textX(titletext, Enum.TextXAlignment.Left)
+			textSize(titletext, 12)
+			
+			local ButtonsFrame = Instance.new("ScrollingFrame", btn) borderpixel(ButtonsFrame)
+			size(ButtonsFrame, 1, 0, 0, 0)
+			ButtonsFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+			pos(ButtonsFrame, 0, 0, 1, 1)
+			backgroundcolor(ButtonsFrame, 0, 0, 25)
+			corner(ButtonsFrame, 0, 7)
+			stroke(ButtonsFrame, 0, 0, 150, 1)
+			ButtonsFrame.Visible = false
+			
+			for i,v in pairs(Buttons) do
+				sizeYframe = i*22
+				if i > 1 then
+					local border2 = Instance.new("Frame", ButtonsFrame) borderpixel(border2)
+					size(border2, 1, 0, 0, 1)
+					pos(border2, 0, 0, 0, (i-1)*22)
+					backgroundcolor(border2, 0, 0, 150)
+				end
+				local btn1 = Instance.new("TextButton", ButtonsFrame) borderpixel(btn1)
+				text(btn1, " "..v)
+				textColor(btn1, 255, 255, 255)
+				textFont(btn1, Enum.Font.Cartoon)
+				textSize(btn1, 15)
+				textX(btn1, Enum.TextXAlignment.Left)
+				size(btn1, 1, 0, 0, 23)
+				pos(btn1, 0, 0, 0, (i-1)*22)
+				tbackground(btn1)
+				btn1.MouseButton1Click:Connect(function()
+					text(titletext, " Selected: "..v)
+					callback(v)
+					opening = true
+					t:Create(visualbtn, info, {Rotation = -90}):Play()
+					local tween1 = t:Create(ButtonsFrame, info, {Size = UDim2.new(1, 0, 0, 0)})
+					tween1:Play()
+					tween1.Completed:Wait()
+					ButtonsFrame.Visible = false
+					opened = false
+					opening = false
+				end)
+			end
+			
+			titlebtn.MouseButton1Click:Connect(function()
+				if not opened and not opening then
+					opening = true
+					opened = true
+					t:Create(visualbtn, info, {Rotation = 90}):Play()
+					ButtonsFrame.Visible = true
+					local tween1=t:Create(ButtonsFrame, info, {Size = UDim2.new(1, 0, 0, sizeYframe)})
+					tween1:Play()
+					tween1.Completed:Wait()
+					opening = false
+				elseif opened and not opening then
+					opening = true
+					t:Create(visualbtn, info, {Rotation = -90}):Play()
+					local tween1 = t:Create(ButtonsFrame, info, {Size = UDim2.new(1, 0, 0, 0)})
+					tween1:Play()
+					tween1.Completed:Wait()
+					ButtonsFrame.Visible = false
+					opened = false
+					opening = false
+				end
 			end)
 		end
 		return Buttons
