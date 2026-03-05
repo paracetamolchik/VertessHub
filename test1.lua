@@ -901,9 +901,9 @@ function new.Window(namewindow)
 			
 			local rainbowdb = false
 			local rainbowtimer = 0
-			local rainbowSpeed = 0.003
-			local min = 0.001
-			local max = 0.02
+			local rainbowSpeed = 0.0015
+			local min = 0.0002
+			local max = 0.015
 			
 			local rainbowtoggle = Instance.new("TextButton", framePicker) borderpixel(rainbowtoggle)
 			text(rainbowtoggle, "")
@@ -977,7 +977,7 @@ function new.Window(namewindow)
 				local relativeX = mouse.X - fillbar.Parent.AbsolutePosition.X
 				local newXScale = math.clamp(relativeX / 100, 0, 1)
 				t:Create(fillbar, info3, {Size = UDim2.new(newXScale, 0, 1, 0)}):Play()
-				rainbowSpeed = tonumber(string.format("%." .. tostring(3) .. "f", newXScale * (max - min) + min))
+				rainbowSpeed = tonumber(string.format("%." .. tostring(5) .. "f", newXScale * (max - min) + min))
 			end
 
 			local function onInputChanged(input)
