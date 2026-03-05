@@ -903,7 +903,7 @@ function new.Window(namewindow)
 			local rainbowtimer = 0
 			local rainbowSpeed = 0.0015
 			local min = 0.0002
-			local max = 0.015
+			local max = 0.01
 			
 			local rainbowtoggle = Instance.new("TextButton", framePicker) borderpixel(rainbowtoggle)
 			text(rainbowtoggle, "")
