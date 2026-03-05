@@ -1075,7 +1075,8 @@ function new.Window(namewindow)
 				end
 			end)
 			
-			RunS.RenderStepped:Connect(function()
+			while true do
+				task.wait()
 				if not rainbowdb then
 					if isMouseDown then
 						local PCPos = PC.AbsolutePosition
@@ -1131,7 +1132,7 @@ function new.Window(namewindow)
 						rainbowtimer = 0
 					end
 				end
-			end)
+			end
 		end
 		return Buttons
 	end
