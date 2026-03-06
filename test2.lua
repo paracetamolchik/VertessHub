@@ -349,7 +349,7 @@ function new.Window(namewindow)
 				end
 			elseif not Main1.Visible and not Collapsed then
 				Main1.Visible = true
-				t:Create(Main1, info, {Size = UDim2.new(0, 380, 0, 270)}):Play()
+				t:Create(Main1, info, {Size = UDim2.new(0, 420, 0, 280)}):Play()
 			end
 		end
 	end)
