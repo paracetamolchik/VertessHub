@@ -264,7 +264,7 @@ function new.Window(namewindow)
 				t:Create(Main1, info, {Size = UDim2.new(0, CollapsedSize, 0, 30)}):Play()
 			end
 		else
-			t:Create(Main1, info, {Size = UDim2.new(0, 380, 0, 270)}):Play()
+			t:Create(Main1, info, {Size = UDim2.new(0, 420, 0, 280)}):Play()
 		end
 		Collapsed = not Collapsed
 	end)
