@@ -422,7 +422,7 @@ function new.Window(namewindow)
 			textY(Label, Enum.TextYAlignment.Bottom)
 			tbackground(Label)
 			return {
-				Update = function(txt)
+				Update = function(a, txt)
 					Label.Text = " "..txt
 				end
 			}
@@ -460,7 +460,7 @@ function new.Window(namewindow)
 			end)
 			
 			return {
-				Update = function(txt)
+				Update = function(a, txt)
 					textbtn.Text = " "..txt
 				end
 			}
@@ -513,7 +513,7 @@ function new.Window(namewindow)
 			end)
 			
 			return {
-				Update = function(txt)
+				Update = function(a, txt)
 					textbtn.Text = " "..txt
 				end
 			}
@@ -600,21 +600,18 @@ function new.Window(namewindow)
 			textval.Text = default
 			
 			return {
-				Update = function(newtxt, default2, max2, min2, nums2)
-					if newtxt ~= nil then
-						text(Label, " "..newtxt)
+				Update = function(a, newtxt2, default2, max2, min2, nums2)
+					if newtxt2 ~= nil then
+						Label.Text = " "..tostring(newtxt2)
 					end
-					if default2 ~= nil then
-						default = default2 or default
-					end
-					min = min2 or min
-					if max2 ~= nil then
-						max = max2 or max
-					end
-					nums2 = nums2 or nums
+					default = default2 ~= nil and default2 or default
+					min = min2 ~= nil and min2 or min
+					max = max2 ~= nil and max2 or max
+					nums = nums2 ~= nil and nums2 or nums
+
 					local initialXScale2 = (default - min) / (max - min)
-					t:Create(fillbar, info3, {Size = UDim2.new(initialXScale2, 0, 1, 0)}):Play()
-					textval.Text = default
+					fillbar.Size = UDim2.new(initialXScale2, 0, 1, 0)
+					textval.Text = tostring(default)
 				end
 			}
 		end
@@ -683,7 +680,7 @@ function new.Window(namewindow)
 			end)
 			
 			return {
-				Update = function(newtext, newKey)
+				Update = function(a, newtext, newKey)
 					text(Label, " "..newtext)
 					Key = newKey
 					updateKeyVisual()
@@ -803,7 +800,7 @@ function new.Window(namewindow)
 			end)
 			
 			return {
-				Update = function(newtitle, newbuttons)
+				Update = function(a, newtitle, newbuttons)
 					sizeYframe = 0
 					titlebtn.Text = " "..newtitle
 					for i,v in pairs(ButtonsFrame:GetChildren()) do
@@ -1243,7 +1240,7 @@ function new.Window(namewindow)
 			end)
 			
 			return {
-				Update = function(newcolor)
+				Update = function(a, newcolor)
 					color = newcolor
 					local h2, s2, v2 = newcolor:ToHSV()
 					h = h2
