@@ -602,9 +602,13 @@ function new.Window(namewindow)
 			return {
 				Update = function(newtxt, default2, max2, min2, nums2)
 					text(Label, " "..newtxt)
-					default = default2 or default
+					if default2 ~= nil then
+						default = default2 or default
+					end
 					min = min2 or min
-					max = max2 or max
+					if max2 ~= nil then
+						max = max2 or max
+					end
 					nums2 = nums2 or nums
 					local initialXScale2 = (default - min) / (max - min)
 					t:Create(fillbar, info3, {Size = UDim2.new(initialXScale2, 0, 1, 0)}):Play()
