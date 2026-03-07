@@ -601,7 +601,9 @@ function new.Window(namewindow)
 			
 			return {
 				Update = function(newtxt, default2, max2, min2, nums2)
-					text(Label, " "..newtxt)
+					if newtxt ~= nil then
+						text(Label, " "..newtxt)
+					end
 					if default2 ~= nil then
 						default = default2 or default
 					end
