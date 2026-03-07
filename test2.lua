@@ -411,18 +411,16 @@ function new.Window(namewindow)
 		local Buttons = {}
 
 		function Buttons:Label(labeltext)
-			print(1)
 			SectionPage.CanvasSize = SectionPage.CanvasSize + UDim2.new(0, 0, 0, 31)
 			local Label = Instance.new("TextLabel", CSectionPage) borderpixel(Label)
 			text(Label, " "..labeltext)
-			size(Label, 1, 0, 0, 26)
-			corner(Label, 0, 7)
-			textSize(Label, 16)
+			size(Label, 1, 0, 0, 18)
+			textSize(Label, 12)
 			textColor(Label, 255, 255, 255)
 			textFont(Label, Enum.Font.Cartoon)
 			textX(Label, Enum.TextXAlignment.Left)
-			stroke(Label, 0, 0, 150, 1)
-			backgroundcolor(Label, 0, 0, 25)
+			textY(Label, Enum.TextYAlignment.Bottom)
+			tbackground(Label)
 			return {
 				Update = function(txt)
 					Label.Text = " "..txt
